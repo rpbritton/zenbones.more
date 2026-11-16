@@ -1,7 +1,14 @@
 local function to_token_colors(spec)
+	local font_style = spec.gui or ""
+	if font_style == "NONE" then
+		font_style = ""
+	else
+		font_style = font_style:gsub(",", " ")
+	end
+
 	return {
 		["foreground"] = spec.fg,
-		["fontStyle"] = spec.gui ~= nil and spec.gui or "",
+		["fontStyle"] = font_style,
 	}
 end
 
@@ -26,6 +33,7 @@ local function to_table(colorscheme)
 			["foreground"] = specs.Normal.fg, -- Overall foreground color. This color is only used if not overridden by a component.
 			["disabledForeground"] = specs.Normal.fg .. "80", -- Overall foreground for disabled elements. This color is only used if not overridden by a component.
 			["widget.shadow"] = specs.StatusLine.bg, -- Shadow color of widgets such as Find/Replace inside the editor.
+			["widget.border"] = specs.VertSplit.fg .. "a0", -- Border color of widgets such as Find/Replace inside the editor.
 			["selection.background"] = specs.Visual.bg, -- Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal).
 			["descriptionForeground"] = specs.Normal.fg, -- Foreground color for description text providing additional information, for example for a label.
 			["errorForeground"] = specs.ErrorMsg.fg, -- Overall foreground color for error messages (this color is only used if not overridden by a component).
@@ -53,7 +61,6 @@ local function to_table(colorscheme)
 			["checkbox.background"] = specs.StatusLine.bg, -- Background color of checkbox widget.
 			["checkbox.foreground"] = specs.StatusLine.fg, -- Foreground color of checkbox widget.
 			-- ["checkbox.border"] = , -- Border color of checkbox widget.
-
 
 			-- Editor Groups & Tabs: https://code.visualstudio.com/api/references/theme-color#editor-groups-tabs
 			["editorGroupHeader.tabsBackground"] = specs.StatusLineNC.bg,
@@ -86,8 +93,8 @@ local function to_table(colorscheme)
 			["statusBarItem.remoteBackground"] = specs.StatusLine.bg,
 
 			-- Editor colors: https://code.visualstudio.com/api/references/theme-color#editor-colors
-			["editor.foreground"] = specs.Normal.fg, -- Editor background color.
-			["editor.background"] = specs.Normal.bg, -- Editor default foreground color.
+			["editor.foreground"] = specs.Normal.fg, -- Editor default foreground color.
+			["editor.background"] = specs.Normal.bg, -- Editor background color.
 			["editor.lineHighlightBackground"] = specs.CursorLine.bg,
 			["editor.selectionBackground"] = specs.Visual.bg,
 			-- ["editorCursor.background"] = , -- The background color of the editor cursor. Allows customizing the color of a character overlapped by a block cursor.
@@ -95,11 +102,11 @@ local function to_table(colorscheme)
 			["editorIndentGuide.activeBackground"] = specs.VertSplit.fg .. "a0",
 			["editorIndentGuide.background"] = specs.VertSplit.fg .. "50",
 			["editorLineNumber.activeForeground"] = specs.CursorLineNr.fg, -- Color of editor line numbers.
-			["editorLineNumber.foreground"] = specs.LineNr.fg, -- Color of the active editor line number.
+			["editorLineNumber.foreground"] = specs.LineNr.fg, -- Color of editor line numbers.
 			["editorRuler.foreground"] = specs.VertSplit.fg .. "a0",
 			-- Find colors depend on the current find string in the Find/Replace dialog.
 			["editor.findMatchBackground"] = specs.CurSearch.bg, -- Color of the current search match.
-			["editor.findMatchHighlightBackground"] = specs.Search.bg, -- Color of the other search matches. The color must not be opaque so as not to hide underlying decorations.
+			["editor.findMatchHighlightBackground"] = specs.Search.bg .. "80", -- Color of the other search matches. The color must not be opaque so as not to hide underlying decorations.
 			-- ["editor.findRangeHighlightBackground"] = specs., -- Color the range limiting the search (Enable 'Find in Selection' in the find widget). The color must not be opaque so as not to hide underlying decorations.
 			-- ["editor.findMatchBorder"] = specs., -- Border color of the current search match.
 			-- ["editor.findMatchHighlightBorder"] = specs., -- Border color of the other search matches.
@@ -107,9 +114,9 @@ local function to_table(colorscheme)
 			-- This ruler is located beneath the scroll bar on the right edge of the editor and gives an overview of the decorations in the editor.
 			-- ["editorOverviewRuler.background"] = , -- Background color of the editor overview ruler. Only used when the minimap is enabled and placed on the right side of the editor.
 			-- ["editorOverviewRuler.border"] = , -- Color of the overview ruler border.
-			["editorOverviewRuler.findMatchForeground"] = specs.Search.bg, -- Overview ruler marker color for find matches. The color must not be opaque so as not to hide underlying decorations.
+			["editorOverviewRuler.findMatchForeground"] = specs.Search.bg .. "80", -- Overview ruler marker color for find matches. The color must not be opaque so as not to hide underlying decorations.
 			-- ["editorOverviewRuler.rangeHighlightForeground"] = , -- Overview ruler marker color for highlighted ranges, like by the Quick Open, Symbol in File and Find features. The color must not be opaque so as not to hide underlying decorations.
-			["editorOverviewRuler.selectionHighlightForeground"] = specs.Visual.bg, -- Overview ruler marker color for selection highlights. The color must not be opaque so as not to hide underlying decorations.
+			["editorOverviewRuler.selectionHighlightForeground"] = specs.Visual.bg .. "80", -- Overview ruler marker color for selection highlights. The color must not be opaque so as not to hide underlying decorations.
 			-- ["editorOverviewRuler.wordHighlightForeground"] = , -- Overview ruler marker color for symbol highlights. The color must not be opaque so as not to hide underlying decorations.
 			-- ["editorOverviewRuler.wordHighlightStrongForeground"] = , -- Overview ruler marker color for write-access symbol highlights. The color must not be opaque so as not to hide underlying decorations.
 			["editorOverviewRuler.modifiedForeground"] = specs.DiffChange.bg, -- Overview ruler marker color for modified content.
@@ -142,11 +149,10 @@ local function to_table(colorscheme)
 			-- ["editorGutter.commentRangeForeground"] = , -- Editor gutter decoration color for commenting ranges.
 			-- ["editorGutter.foldingControlForeground"] = , -- Color of the folding control in the editor gutter.
 
-
 			-- Diff editor colors: https://code.visualstudio.com/api/references/theme-color#diff-editor-colors
-			["diffEditor.insertedTextBackground"] = specs.DiffAdd.fg, -- Background color for text that got inserted. The color must not be opaque so as not to hide underlying decorations.
+			["diffEditor.insertedTextBackground"] = specs.DiffAdd.bg .. "80", -- Background color for text that got inserted. The color must not be opaque so as not to hide underlying decorations.
 			-- ["diffEditor.insertedTextBorder"] = specs., -- Outline color for the text that got inserted.
-			["diffEditor.removedTextBackground"] = specs.DiffDelete.fg, -- Background color for text that got removed. The color must not be opaque so as not to hide underlying decorations.
+			["diffEditor.removedTextBackground"] = specs.DiffDelete.bg .. "80", -- Background color for text that got removed. The color must not be opaque so as not to hide underlying decorations.
 			-- ["diffEditor.removedTextBorder"] = specs., -- Outline color for text that got removed.
 			-- ["diffEditor.border"] = specs., -- Border color between the two text editors.
 			-- ["diffEditor.diagonalFill"] = specs., -- Color of the diff editor's diagonal fill. The diagonal fill is used in side-by-side diff views.
@@ -296,7 +302,6 @@ local function to_table(colorscheme)
 			["notificationsWarningIcon.foreground"] = specs.DiagnosticWarn.fg, -- The color used for the notification warning icon.
 			["notificationsInfoIcon.foreground"] = specs.DiagnosticInfo.fg, -- The color used for the notification info icon.
 
-
 			-- -- ["badge.background"] = specs.DiagnosticInfo.fg, -- todo
 			-- ["dropdown.background"] = specs.Normal.bg, -- todo
 			-- -- ["focusBorder"] = specs.Pmenu.bg, -- todo
@@ -348,8 +353,8 @@ local function to_table(colorscheme)
 			["terminal.ansiRed"] = term.red, -- 'Red' ANSI color in the terminal.
 			["terminal.ansiWhite"] = term.white, -- 'White' ANSI color in the terminal.
 			["terminal.ansiYellow"] = term.yellow, -- 'Yellow' ANSI color in the terminal.
-			["terminalCursor.background"] = specs.TermCursor.fg, -- The background color of the terminal cursor. Allows customizing the color of a character overlapped by a block cursor.
-			["terminalCursor.foreground"] = specs.TermCursor.bg, -- The foreground color of the terminal cursor.
+			["terminalCursor.background"] = specs.TermCursor.bg, -- The background color of the terminal cursor. Allows customizing the color of a character overlapped by a block cursor.
+			["terminalCursor.foreground"] = specs.TermCursor.fg, -- The foreground color of the terminal cursor.
 
 			-- Bracket matches:
 
@@ -358,13 +363,13 @@ local function to_table(colorscheme)
 			-- ["editorBracketMatch.border"] = , -- Color for matching brackets boxes.
 
 			-- Bracket pair colorization:
-			["editorBracketHighlight.foreground1"] = term.blue, -- Foreground color of brackets (1). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.foreground2"] = term.green, -- Foreground color of brackets (2). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.foreground3"] = term.magenta, -- Foreground color of brackets (3). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.foreground4"] = term.blue, -- Foreground color of brackets (4). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.foreground5"] = term.green, -- Foreground color of brackets (5). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.foreground6"] = term.magenta, -- Foreground color of brackets (6). Requires enabling bracket pair colorization.
-			["editorBracketHighlight.unexpectedBracket.foreground"] = term.red, -- Foreground color of unexpected brackets.
+			["editorBracketHighlight.foreground1"] = specs.Delimiter.fg, -- Foreground color of brackets (1). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.foreground2"] = specs.Identifier.fg, -- Foreground color of brackets (2). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.foreground3"] = specs.Special.fg, -- Foreground color of brackets (3). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.foreground4"] = specs.Delimiter.fg, -- Foreground color of brackets (4). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.foreground5"] = specs.Identifier.fg, -- Foreground color of brackets (5). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.foreground6"] = specs.Special.fg, -- Foreground color of brackets (6). Requires enabling bracket pair colorization.
+			["editorBracketHighlight.unexpectedBracket.foreground"] = specs.DiagnosticError.fg, -- Foreground color of unexpected brackets.
 
 			-- term.black
 			-- term.blue
@@ -802,11 +807,10 @@ local function to_table(colorscheme)
 			-- -- 	}
 			-- -- }
 
-
 			{
 				["name"] = "Comment",
 				["scope"] = {
-					"comment"
+					"comment",
 				},
 				["settings"] = to_token_colors(specs.Comment),
 			},
@@ -815,35 +819,47 @@ local function to_table(colorscheme)
 				["scope"] = {
 					"variable.other.constant",
 					"constant",
-					"string"
+					"variable.language",
+					"support.constant",
+					"string.regexp",
 				},
 				["settings"] = to_token_colors(specs.Constant),
 			},
 			{
+				["name"] = "String",
+				["scope"] = {
+					"string",
+				},
+				["settings"] = to_token_colors(specs.String),
+			},
+			{
 				["name"] = "Number",
 				["scope"] = {
-					"constant.numeric"
+					"constant.numeric",
 				},
 				["settings"] = to_token_colors(specs.Number),
 			},
 			{
 				["name"] = "Boolean",
 				["scope"] = {
-					"constant.language.boolean"
+					"constant.language.boolean",
 				},
 				["settings"] = to_token_colors(specs.Boolean),
 			},
 			{
 				["name"] = "Identifier",
 				["scope"] = {
-					"variable.other"
+					"variable.other",
+					"support.variable",
+					"string.special.symbol",
 				},
 				["settings"] = to_token_colors(specs.Identifier),
 			},
 			{
 				["name"] = "Function",
 				["scope"] = {
-					"entity.name.function"
+					"entity.name.function",
+					"support.function",
 				},
 				["settings"] = to_token_colors(specs.Function),
 			},
@@ -867,6 +883,10 @@ local function to_table(colorscheme)
 					"storage.type",
 					"storage.modifier",
 					"keyword.other.typedef",
+					"entity.name.type",
+					"entity.other.inherited-class",
+					"support.type",
+					"support.class",
 				},
 				["settings"] = to_token_colors(specs.Type),
 			},
@@ -874,8 +894,19 @@ local function to_table(colorscheme)
 				["name"] = "Special",
 				["scope"] = {
 					"punctuation.definition.template-expression",
+					"constant.character.escape",
+					"string.escape",
+					"string.special",
 				},
 				["settings"] = to_token_colors(specs.Special),
+			},
+			{
+				["name"] = "Delimiter",
+				["scope"] = {
+					"punctuation",
+					"tag.delimiter",
+				},
+				["settings"] = to_token_colors(specs.Delimiter),
 			},
 			{
 				["name"] = "Tag",
@@ -888,17 +919,18 @@ local function to_table(colorscheme)
 				["name"] = "PropertyName",
 				["scope"] = {
 					"support.type.property-name",
+					"variable.other.property",
 				},
-				["settings"] = to_token_colors(specs.Number),
+				["settings"] = to_token_colors(specs.Identifier),
 			},
-		}
+		},
 	}
 end
 
 local function to_json(el)
 	if type(el) == "table" and el["hex"] == nil then
 		local object = true
-		for key, value in pairs(el) do
+		for key in pairs(el) do
 			if type(key) == "string" then
 				object = true
 			elseif type(key) == "number" then
@@ -909,11 +941,11 @@ local function to_json(el)
 		local properties = {}
 		if object == true then
 			for key, value in pairs(el) do
-				table.insert(properties, "\"" .. key .. "\":" .. to_json(value))
+				table.insert(properties, '"' .. key .. '":' .. to_json(value))
 			end
 			return "{" .. table.concat(properties, ",") .. "}"
 		else
-			for key, value in ipairs(el) do
+			for _, value in ipairs(el) do
 				table.insert(properties, to_json(value))
 			end
 			return "[" .. table.concat(properties, ",") .. "]"
@@ -921,7 +953,7 @@ local function to_json(el)
 	elseif type(el) == "number" then
 		return tostring(el)
 	else
-		return "\"" .. tostring(el) .. "\""
+		return '"' .. tostring(el) .. '"'
 	end
 end
 
@@ -932,14 +964,15 @@ local function to_vscode(colorscheme)
 end
 
 local ness_list = { "dim", "bright", "stark", "warm", "default" }
+local env = getfenv()
 
 for _, ness in ipairs(ness_list) do
 	local specs_name = ness ~= "default" and "specs_" .. ness or "specs"
-	local specs = getfenv()[specs_name]
+	local specs = env[specs_name]
 
 	local metadata = {
-		Palette = name:gsub("_%a+", ""),
-		Background = background,
+		Palette = env.name:gsub("_%a+", ""),
+		Background = env.background,
 		Ness = ness,
 	}
 
@@ -950,7 +983,7 @@ for _, ness in ipairs(ness_list) do
 			{ specs, term, metadata },
 			to_vscode,
 			-- { prepend, "// This file is auto-generated by shipwright.nvim" },
-			{ overwrite, string.format("extras/vscode/themes/%s_%s.json", name, ness) }
+			{ overwrite, string.format("extras/vscode/themes/%s_%s.json", env.name, ness) }
 		)
 		-- selene: deny(undefined_variable)
 		---@diagnostic enable: undefined-global
