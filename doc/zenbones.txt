@@ -1,5 +1,5 @@
 *zenbones.txt*          A collection of contrast-based vim/neovim colorschemes
-                        For Vim 8.1 / Nvim v0.8.0    Last change: 2026 June 26
+                    For Vim 8.1 / Nvim v0.8.0    Last change: 2026 November 16
 
 ==============================================================================
 Table of Contents                                 *zenbones-table-of-contents*
@@ -29,9 +29,9 @@ Just apply the colorscheme as usual:
 >vim
     set termguicolors
     set background=light " or dark
-    
+
     colorscheme zenbones
-    
+
     " or any from the collection
     colorscheme zenwritten
     colorscheme neobones
@@ -166,7 +166,7 @@ colors in lua:
 >lua
     local theme = require "zenbones" -- or any other flavor
     local palette = require "zenbones.palette"
-    
+
     print(theme.StatusLine.bg.hex)
     print(palette.dark.blossom.darken(20).hex)
 <
@@ -181,7 +181,7 @@ Here’s an example of how to extend/override some highlights.
 >lua
     local lush = require "lush"
     local base = require "zenbones"
-    
+
     -- Create some specs
     local specs = lush.parse(function()
         return {
@@ -216,13 +216,13 @@ following:
 >lua
     local colors_name = "gruvbones"
     vim.g.colors_name = colors_name -- Required when defining a colorscheme
-    
+
     local lush = require "lush"
     local hsluv = lush.hsluv -- Human-friendly hsl
     local util = require "zenbones.util"
-    
+
     local bg = vim.o.background
-    
+
     -- Define a palette. Use `palette_extend` to fill unspecified colors
     -- Based on https://github.com/gruvbox-community/gruvbox#palette
     local palette
@@ -249,11 +249,11 @@ following:
             sky = hsluv "#83c07c",
         }, bg)
     end
-    
+
     -- Generate the lush specs using the generator util
     local generator = require "zenbones.specs"
     local base_specs = generator.generate(palette, bg, generator.get_global_config(colors_name, bg))
-    
+
     -- Optionally extend specs using Lush
     local specs = lush.extends({ base_specs }).with(function()
         return {
@@ -262,10 +262,10 @@ following:
             Type { fg = palette.sky, gui = "italic" },
         }
     end)
-    
+
     -- Pass the specs to lush to apply
     lush(specs)
-    
+
     -- Optionally set term colors
     require("zenbones.term").apply_colors(palette)
 <
