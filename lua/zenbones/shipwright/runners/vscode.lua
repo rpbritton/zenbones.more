@@ -940,8 +940,13 @@ local function to_json(el)
 		end
 		local properties = {}
 		if object == true then
-			for key, value in pairs(el) do
-				table.insert(properties, '"' .. key .. '":' .. to_json(value))
+			local keys = {}
+			for key in pairs(el) do
+				table.insert(keys, key)
+			end
+			table.sort(keys)
+			for _, key in ipairs(keys) do
+				table.insert(properties, '"' .. key .. '":' .. to_json(el[key]))
 			end
 			return "{" .. table.concat(properties, ",") .. "}"
 		else
